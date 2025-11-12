@@ -25,6 +25,9 @@ export default function About() {
             <img 
               src={`/assets/gallery/${aboutImages[0]}`} 
               alt="Ash-lee Motors workshop"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',
@@ -56,6 +59,7 @@ export default function About() {
                 autoPlay
                 loop
                 playsInline
+                preload="metadata"
                 style={{
                   width: '100%',
                   borderRadius: 'var(--radius-16)',
@@ -72,6 +76,8 @@ export default function About() {
               <img
                 src={`/assets/${aboutImages[1]}`}
                 alt="Ash-lee Motors team"
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: '100%',
                   height: 'auto',

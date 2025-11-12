@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ScrollAnimation from "../components/ScrollAnimation";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('specialized');
@@ -101,6 +102,8 @@ export default function Home() {
           loop 
           muted 
           playsInline
+          preload="metadata"
+          poster="/assets/logo.PNG"
         >
           <source src="/assets/Ash-Lee Reel 1.mp4" type="video/mp4" />
         </video>
@@ -123,7 +126,9 @@ export default function Home() {
       {/* SERVICES GRID */}
       <section className="section">
         <div className="container">
-          <h2>Our Services</h2>
+          <ScrollAnimation>
+            <h2>Our Services</h2>
+          </ScrollAnimation>
           
           <div className="gallery-filters" style={{marginBottom: 'var(--space-6)'}}>
             <button
@@ -142,27 +147,46 @@ export default function Home() {
 
           <div className="grid grid-3 mt-4">
             {(activeTab === 'specialized' ? specializedServices : generalServices).map((service, index) => (
-              <article key={index} className="card service-card">
-                <img 
-                  src={service.image} 
-                  alt={service.title}
-                  style={{
-                    width: '100%',
-                    height: '180px',
-                    objectFit: 'cover',
-                    borderRadius: 'var(--radius-8)',
-                    marginBottom: 'var(--space-4)'
-                  }}
-                />
+              <ScrollAnimation key={index} delay={index * 100}>
+                <article className="card service-card">
+                <div className="service-card-image-wrapper">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority={index < 3 ? "high" : "low"}
+                    style={{
+                      width: '100%',
+                      height: '180px',
+                      objectFit: 'cover',
+                      borderRadius: 'var(--radius-8)',
+                      marginBottom: 'var(--space-4)',
+                      transition: 'transform 0.3s ease'
+                    }}
+                  />
+                  <div className="service-card-overlay">
+                    <a 
+                      className="btn btn-primary btn-sm" 
+                      href="https://wa.me/27787764024" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Quick WhatsApp
+                    </a>
+                  </div>
+                </div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
-                <div style={{display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap'}}>
+                <div className="service-card-actions" style={{display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', marginTop: 'auto'}}>
                   <a className="btn btn-primary btn-sm" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
                     WhatsApp
                   </a>
                   <a className="btn btn-secondary btn-sm" href="tel:0787764024">Call</a>
                 </div>
               </article>
+              </ScrollAnimation>
             ))}
           </div>
         </div>

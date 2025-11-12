@@ -202,17 +202,34 @@ export default function Services() {
           <div className="grid grid-3 mt-4">
             {(activeTab === 'specialized' ? specializedServices : generalServices).map((service, index) => (
               <article key={index} className="card service-card">
-                <img 
-                  src={service.image.startsWith('/assets/') ? service.image : `/assets/gallery/${service.image}`} 
-                  alt={service.title}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover',
-                    borderRadius: 'var(--radius-8)',
-                    marginBottom: 'var(--space-4)'
-                  }}
-                />
+                <div className="service-card-image-wrapper">
+                  <img 
+                    src={service.image.startsWith('/assets/') ? service.image : `/assets/gallery/${service.image}`} 
+                    alt={service.title}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority={index < 3 ? "high" : "low"}
+                    style={{
+                      width: '100%',
+                      height: '200px',
+                      objectFit: 'cover',
+                      borderRadius: 'var(--radius-8)',
+                      marginBottom: 'var(--space-4)',
+                      transition: 'transform 0.3s ease'
+                    }}
+                  />
+                  <div className="service-card-overlay">
+                    <a 
+                      className="btn btn-primary btn-sm" 
+                      href="https://wa.me/27787764024" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Quick WhatsApp
+                    </a>
+                  </div>
+                </div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
                 <ul style={{marginBottom: 'var(--space-4)', paddingLeft: 'var(--space-6)'}}>
@@ -220,7 +237,7 @@ export default function Services() {
                     <li key={i} style={{marginBottom: 'var(--space-2)'}}>{detail}</li>
                   ))}
                 </ul>
-                <div style={{display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap'}}>
+                <div className="service-card-actions" style={{display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', marginTop: 'auto'}}>
                   <a className="btn btn-primary btn-sm" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
                     WhatsApp
                   </a>

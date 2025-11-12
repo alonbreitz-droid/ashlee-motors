@@ -11,17 +11,17 @@ export default function Footer() {
             <a href="mailto:info@ash-leemotors.co.za">info@ash-leemotors.co.za</a>
             <p>
               <a href="https://wa.me/27787764024" target="_blank" rel="noreferrer">078 776 4024 (WhatsApp)</a>
-              {' '}or{' '}
+              {' '}
               <a href="tel:0787764024">Call</a>
             </p>
             <p>
               <a href="https://wa.me/27789996243" target="_blank" rel="noreferrer">078 999 6243 (WhatsApp)</a>
-              {' '}or{' '}
+              {' '}
               <a href="tel:0789996243">Call</a>
             </p>
             <p>
               <a href="https://wa.me/27788034782" target="_blank" rel="noreferrer">078 803 4782 (WhatsApp)</a>
-              {' '}or{' '}
+              {' '}
               <a href="tel:0788034782">Call</a>
             </p>
           </div>

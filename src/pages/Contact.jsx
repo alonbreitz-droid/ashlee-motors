@@ -1,105 +1,154 @@
 import React from 'react';
+import ScrollAnimation from '../components/ScrollAnimation';
 
 export default function Contact() {
   return (
-    <main style={{
-      position: 'relative',
-      minHeight: '100vh',
-      width: '100vw',
-      margin: 0,
-      padding: 0,
-      backgroundImage: 'url(/assets/gallery/JFS_2360.jpeg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed'
-    }}>
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        minHeight: '100vh',
-        backgroundColor: 'rgba(28, 28, 28, 0.6)',
-        backdropFilter: 'blur(2px)',
-        zIndex: 1
-      }}></div>
+    <main className="contact-page">
+      <div className="contact-background-overlay"></div>
       
-      <section className="section" style={{position: 'relative', zIndex: 2, minHeight: '100vh', paddingTop: 'var(--space-12)', paddingBottom: 'var(--space-12)'}}>
+      <section className="section contact-section-wrapper">
         <div className="container">
-          <h1 style={{color: 'var(--white)'}}>Contact Us</h1>
-
-          <div className="map-placeholder" style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(var(--blur-sm))',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            padding: 0,
-            overflow: 'hidden'
-          }}>
-            <iframe
-              src="https://www.google.com/maps?q=16+4th+Street+Wynberg+Sandton&output=embed"
-              width="100%"
-              height="100%"
-              style={{
-                border: 0,
-                minHeight: '400px',
-                borderRadius: 'var(--radius-16)'
-              }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Ash-lee Motors Location - 16 4th Street, Wynberg, Sandton"
-            ></iframe>
-          </div>
-
-          <div className="contact-info">
-            <div>
-              <div className="contact-section">
-                <h2 style={{color: 'var(--white)'}}>Address</h2>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>16 4th Street</p>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>Wynberg, Sandton</p>
-              </div>
-
-              <div className="contact-section">
-                <h2 style={{color: 'var(--white)'}}>Opening Hours</h2>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}><strong>Monday - Friday:</strong> 08:00 - 17:00</p>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}><strong>Saturday:</strong> Closed</p>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}><strong>Sunday:</strong> Closed</p>
-              </div>
+          <ScrollAnimation>
+            <div className="contact-header">
+              <h1 className="contact-title">Get in Touch</h1>
+              <p className="contact-subtitle">Visit us or reach out - we're here to help with all your automotive needs</p>
             </div>
+          </ScrollAnimation>
 
-            <div>
-              <div className="contact-section">
-                <h2 style={{color: 'var(--white)'}}>Get in Touch</h2>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>
-                  <a href="https://wa.me/27787764024" target="_blank" rel="noreferrer" style={{color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'underline'}}>078 776 4024 (WhatsApp)</a>
-                  {' '}or{' '}
-                  <a href="tel:0787764024" style={{color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'underline'}}>Call</a>
-                </p>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>
-                  <a href="https://wa.me/27789996243" target="_blank" rel="noreferrer" style={{color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'underline'}}>078 999 6243 (WhatsApp)</a>
-                  {' '}or{' '}
-                  <a href="tel:0789996243" style={{color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'underline'}}>Call</a>
-                </p>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>
-                  <a href="mailto:info@ash-leemotors.co.za" style={{color: 'rgba(255, 255, 255, 0.9)'}}>info@ash-leemotors.co.za</a>
-                </p>
-                <div className="contact-buttons">
-                  <a className="btn btn-primary" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
-                    WhatsApp us
-                  </a>
-                  <a className="btn btn-secondary" href="tel:0787764024">Call</a>
+          <div className="contact-grid">
+            {/* Map Section */}
+            <ScrollAnimation delay={100}>
+              <div className="contact-card contact-map-card">
+                <div className="contact-card-header">
+                  <span className="contact-icon">📍</span>
+                  <h2>Find Us</h2>
+                </div>
+                <div className="map-container">
+                  <iframe
+                    src="https://www.google.com/maps?q=16+4th+Street+Wynberg+Sandton&output=embed"
+                    width="100%"
+                    height="100%"
+                    className="contact-map"
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Ash-lee Motors Location - 16 4th Street, Wynberg, Sandton"
+                  ></iframe>
+                </div>
+                <div className="map-address">
+                  <p><strong>16 4th Street</strong></p>
+                  <p>Wynberg, Sandton</p>
                 </div>
               </div>
+            </ScrollAnimation>
 
-              <div className="contact-section">
-                <h2 style={{color: 'var(--white)'}}>Parking</h2>
-                <p style={{color: 'rgba(255, 255, 255, 0.9)'}}>
-                  Directions or notes about parking. Ample parking available on-site. 
-                  Please use the designated customer parking area.
+            {/* Contact Methods */}
+            <ScrollAnimation delay={200}>
+              <div className="contact-card contact-methods-card">
+                <div className="contact-card-header">
+                  <span className="contact-icon">📞</span>
+                  <h2>Contact Us</h2>
+                </div>
+                <div className="contact-methods">
+                  <div className="contact-method-item">
+                    <div className="contact-method-label">Primary Number</div>
+                    <div className="contact-method-value">
+                      <a href="https://wa.me/27787764024" target="_blank" rel="noreferrer" className="contact-link whatsapp-link">
+                        078 776 4024
+                      </a>
+                    </div>
+                    <div className="contact-method-actions">
+                      <a className="btn btn-primary btn-small" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
+                        WhatsApp
+                      </a>
+                      <a className="btn btn-secondary btn-small" href="tel:0787764024">
+                        Call
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="contact-method-item">
+                    <div className="contact-method-label">Secondary Number</div>
+                    <div className="contact-method-value">
+                      <a href="https://wa.me/27789996243" target="_blank" rel="noreferrer" className="contact-link whatsapp-link">
+                        078 999 6243
+                      </a>
+                    </div>
+                    <div className="contact-method-actions">
+                      <a className="btn btn-primary btn-small" href="https://wa.me/27789996243" target="_blank" rel="noreferrer">
+                        WhatsApp
+                      </a>
+                      <a className="btn btn-secondary btn-small" href="tel:0789996243">
+                        Call
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="contact-method-item">
+                    <div className="contact-method-label">Additional Number</div>
+                    <div className="contact-method-value">
+                      <a href="https://wa.me/27788034782" target="_blank" rel="noreferrer" className="contact-link whatsapp-link">
+                        078 803 4782
+                      </a>
+                    </div>
+                    <div className="contact-method-actions">
+                      <a className="btn btn-primary btn-small" href="https://wa.me/27788034782" target="_blank" rel="noreferrer">
+                        WhatsApp
+                      </a>
+                      <a className="btn btn-secondary btn-small" href="tel:0788034782">
+                        Call
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="contact-method-item">
+                    <div className="contact-method-label">Email</div>
+                    <div className="contact-method-value">
+                      <a href="mailto:info@ash-leemotors.co.za" className="contact-link email-link">
+                        info@ash-leemotors.co.za
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollAnimation>
+
+            {/* Hours & Info */}
+            <ScrollAnimation delay={300}>
+              <div className="contact-card contact-hours-card">
+                <div className="contact-card-header">
+                  <span className="contact-icon">🕐</span>
+                  <h2>Opening Hours</h2>
+                </div>
+                <div className="hours-list">
+                  <div className="hours-item">
+                    <span className="hours-day">Monday - Friday</span>
+                    <span className="hours-time">08:00 - 17:00</span>
+                  </div>
+                  <div className="hours-item">
+                    <span className="hours-day">Saturday</span>
+                    <span className="hours-time closed">Closed</span>
+                  </div>
+                  <div className="hours-item">
+                    <span className="hours-day">Sunday</span>
+                    <span className="hours-time closed">Closed</span>
+                  </div>
+                </div>
+              </div>
+            </ScrollAnimation>
+
+            {/* Parking Info */}
+            <ScrollAnimation delay={400}>
+              <div className="contact-card contact-parking-card">
+                <div className="contact-card-header">
+                  <span className="contact-icon">🚗</span>
+                  <h2>Parking</h2>
+                </div>
+                <p className="parking-info">
+                  Ample parking available on-site. Please use the designated customer parking area when visiting our workshop.
                 </p>
               </div>
-            </div>
+            </ScrollAnimation>
           </div>
         </div>
       </section>

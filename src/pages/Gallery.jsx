@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Gallery() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -65,6 +65,27 @@ export default function Gallery() {
     setSelectedImage(filteredImages[newIndex]);
   };
 
+  useEffect(() => {
+    if (!selectedImage) return;
+    
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedImage(null);
+      } else if (e.key === 'ArrowRight') {
+        const currentIndex = filteredImages.findIndex(img => img.filename === selectedImage.filename);
+        const newIndex = (currentIndex + 1) % filteredImages.length;
+        setSelectedImage(filteredImages[newIndex]);
+      } else if (e.key === 'ArrowLeft') {
+        const currentIndex = filteredImages.findIndex(img => img.filename === selectedImage.filename);
+        const newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+        setSelectedImage(filteredImages[newIndex]);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage, filteredImages]);
+
   return (
     <main>
       <section className="section">
@@ -94,6 +115,8 @@ export default function Gallery() {
                   src={`/assets/gallery/${item.filename}`} 
                   alt={`Ash-lee Motors ${item.category}`}
                   loading="lazy"
+                  decoding="async"
+                  fetchPriority={item.id < 6 ? "high" : "low"}
                 />
               </div>
             ))}
@@ -109,28 +132,46 @@ export default function Gallery() {
 
       {/* Modal/Lightbox */}
       {selectedImage && (
-        <div className="gallery-modal" onClick={closeModal}>
-          <button className="gallery-modal-close" onClick={closeModal}>×</button>
+        <div 
+          className="gallery-modal" 
+          onClick={closeModal}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image gallery lightbox"
+        >
+          <button 
+            className="gallery-modal-close" 
+            onClick={closeModal}
+            aria-label="Close gallery"
+          >
+            ×
+          </button>
           <button 
             className="gallery-modal-nav gallery-modal-prev" 
             onClick={(e) => {
               e.stopPropagation();
               navigateImage('prev');
             }}
+            aria-label="Previous image"
           >
             ‹
           </button>
           <img 
             src={`/assets/gallery/${selectedImage.filename}`} 
-            alt="Ash-lee Motors"
+            alt={`Ash-lee Motors ${selectedImage.category} - Image ${filteredImages.findIndex(img => img.filename === selectedImage.filename) + 1} of ${filteredImages.length}`}
             onClick={(e) => e.stopPropagation()}
+            loading="eager"
           />
+          <div className="gallery-modal-info">
+            <span>{filteredImages.findIndex(img => img.filename === selectedImage.filename) + 1} / {filteredImages.length}</span>
+          </div>
           <button 
             className="gallery-modal-nav gallery-modal-next" 
             onClick={(e) => {
               e.stopPropagation();
               navigateImage('next');
             }}
+            aria-label="Next image"
           >
             ›
           </button>
