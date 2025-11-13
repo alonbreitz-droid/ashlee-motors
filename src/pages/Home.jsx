@@ -105,7 +105,7 @@ export default function Home() {
           preload="metadata"
           poster="/assets/logo.PNG"
         >
-          <source src="/assets/Ash-Lee Reel 1.mp4" type="video/mp4" />
+          <source src={videoUrls.heroVideo} type="video/mp4" />
         </video>
         <div className="hero-overlay"></div>
         <div className="container hero-content">

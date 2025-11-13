@@ -66,7 +66,7 @@ export default function About() {
                   marginTop: 'var(--space-6)'
                 }}
               >
-                <source src="/assets/Ash-Lee reel 2.mp4" type="video/mp4" />
+                <source src={videoUrls.aboutVideo} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
