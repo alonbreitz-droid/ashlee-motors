@@ -28,3 +28,8 @@ yarn-error.log*
 *.swo
 *~
 
+# Large video files (hosted on Cloudflare R2)
+*.mp4
+**/Ash-Lee Reel*.mp4
+**/Ash-Lee reel*.mp4
+
