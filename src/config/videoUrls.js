@@ -4,14 +4,12 @@
 // Or: Local path for compressed videos (e.g., "/assets/hero-compressed.mp4")
 export const videoUrls = {
   // Hero video - Direct URL or local path
-  // Set via environment variable: VITE_HERO_VIDEO_URL
-  // Or use local compressed video: /assets/hero-compressed.mp4
-  heroVideo: import.meta.env.VITE_HERO_VIDEO_URL || '/assets/Ash-Lee Reel 1.mp4',
+  // Priority: Environment variable > Compressed video > Original (fallback)
+  heroVideo: import.meta.env.VITE_HERO_VIDEO_URL || '/assets/compressed/hero-video.mp4',
   
   // About video - Direct URL or local path
-  // Set via environment variable: VITE_ABOUT_VIDEO_URL
-  // Or use local compressed video: /assets/about-compressed.mp4
-  aboutVideo: import.meta.env.VITE_ABOUT_VIDEO_URL || '/assets/Ash-Lee reel 2.mp4',
+  // Priority: Environment variable > Compressed video > Original (fallback)
+  aboutVideo: import.meta.env.VITE_ABOUT_VIDEO_URL || '/assets/compressed/about-video.mp4',
 };
 
 
