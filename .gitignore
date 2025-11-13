@@ -33,3 +33,6 @@ yarn-error.log*
 **/Ash-Lee Reel*.mp4
 **/Ash-Lee reel*.mp4
 
+# Allow compressed videos for Cloudflare Pages
+!public/assets/compressed/*.mp4
+
