@@ -1,0 +1,10 @@
+name = "ashlee-motors"
+compatibility_date = "2024-01-01"
+
+# Static assets configuration for Cloudflare Pages
+# This tells Wrangler to deploy the dist directory as static assets
+assets = { directory = "./dist" }
+
+[env.production]
+routes = []
+
