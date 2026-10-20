@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Icon from './Icon';
 import { primary } from '../data/business';
 
-// Desktop: WhatsApp pill + scroll-to-top. Phone: a fixed Call / WhatsApp bar.
+// Desktop: scroll-to-top (the sticky nav carries WhatsApp). Phone: a fixed Call / WhatsApp bar.
 export default function FloatingButtons() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -19,17 +19,6 @@ export default function FloatingButtons() {
 
   return (
     <aside aria-label="Quick contact">
-      <a
-        href={primary.whatsapp}
-        target="_blank"
-        rel="noreferrer"
-        className="fab-whatsapp"
-        aria-label="Contact us on WhatsApp"
-      >
-        <Icon name="whatsapp" size={24} />
-        <span>WhatsApp</span>
-      </a>
-
       {showScrollTop && (
         <button className="icon-btn scroll-to-top" onClick={scrollToTop} aria-label="Scroll to top">
           <Icon name="up" size={20} />

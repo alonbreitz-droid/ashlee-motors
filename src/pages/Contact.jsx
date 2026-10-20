@@ -1,6 +1,5 @@
 import React from 'react';
 import PageHeader from '../components/PageHeader';
-import Reveal from '../components/Reveal';
 import Icon from '../components/Icon';
 import { phones, email, address, hours, mapEmbed } from '../data/business';
 
@@ -14,8 +13,8 @@ export default function Contact() {
       <section className="section">
         <div className="container contact-layout">
           <div className="contact-side">
-            <Reveal className="panel">
-              <h2 className="panel-title"><Icon name="phone" size={26} />Contact Us</h2>
+            <section>
+              <h2 className="contact-block-title">Contact Us</h2>
               <div className="number-list">
                 {phones.map(p => (
                   <div className="number" key={p.tel}>
@@ -45,9 +44,9 @@ export default function Contact() {
                   </div>
                 </div>
               </div>
-            </Reveal>
-            <Reveal className="panel" delay={80}>
-              <h2 className="panel-title"><Icon name="clock" size={26} />Opening Hours</h2>
+            </section>
+            <section>
+              <h2 className="contact-block-title">Opening Hours</h2>
               <table className="hours-table">
                 <tbody>
                   {hours.map(h => (
@@ -58,12 +57,12 @@ export default function Contact() {
                   ))}
                 </tbody>
               </table>
-            </Reveal>
+            </section>
           </div>
 
           <div className="contact-side">
-            <Reveal className="panel" delay={80}>
-              <h2 className="panel-title"><Icon name="pin" size={26} />Find Us</h2>
+            <section>
+              <h2 className="contact-block-title">Find Us</h2>
               <div className="map-frame">
                 <iframe
                   src={mapEmbed}
@@ -75,14 +74,14 @@ export default function Contact() {
               </div>
               <p className="address-line">{address.street}</p>
               <p>{address.area}</p>
-            </Reveal>
+            </section>
 
-            <Reveal className="panel" delay={160}>
-              <h2 className="panel-title"><Icon name="car" size={26} />Parking</h2>
+            <section>
+              <h2 className="contact-block-title">Parking</h2>
               <p>
                 Ample parking available on-site. Please use the designated customer parking area when visiting our workshop.
               </p>
-            </Reveal>
+            </section>
           </div>
         </div>
       </section>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PageHeader from '../components/PageHeader';
-import Reveal from '../components/Reveal';
 import Img from '../components/Img';
 import Icon from '../components/Icon';
 import ContactButtons from '../components/ContactButtons';
@@ -27,8 +26,8 @@ export default function Services() {
 
           <div className="service-rows" id="services-panel" role="tabpanel" aria-labelledby={`tab-${activeTab}`}>
             {services.map(service => (
-              <Reveal as="article" key={service.title} className="service-row">
-                <div className={`service-card-media ${service.contain ? 'contain' : ''}`}>
+              <article key={service.title} className="service-row">
+                <div className={`service-media ${service.contain ? 'contain' : ''}`}>
                   <Img name={service.image} alt="" sizes="(min-width: 900px) 45vw, 100vw" />
                 </div>
                 <div className="service-row-body">
@@ -41,7 +40,7 @@ export default function Services() {
                   </ul>
                   <ContactButtons />
                 </div>
-              </Reveal>
+              </article>
             ))}
           </div>
         </div>

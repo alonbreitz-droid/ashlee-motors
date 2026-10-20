@@ -1,6 +1,5 @@
 import React from 'react';
 import PageHeader from '../components/PageHeader';
-import Reveal from '../components/Reveal';
 import Img from '../components/Img';
 import { videoUrls } from '../config/videoUrls';
 
@@ -16,11 +15,11 @@ const reasons = [
 export default function About() {
   return (
     <>
-      <PageHeader eyebrow="Family run · 3 generations" title="About Us" image="JFS_2354" position="center 30%" />
+      <PageHeader title="About Us" image="JFS_2354" position="center 30%" />
 
       <section className="section">
         <div className="container about-intro">
-          <Reveal>
+          <div>
             <h2>Mission &amp; Values</h2>
             <p className="lead">
               At Ash-lee Motors, we believe in doing the job right the first time. With over 70 years of combined experience
@@ -36,9 +35,9 @@ export default function About() {
               We're committed to quick turnarounds without compromising on quality. Whether you need a same-day diagnostic
               or a full engine rebuild, we treat every vehicle with the care and attention it deserves.
             </p>
-          </Reveal>
+          </div>
           {videoUrls.aboutVideo && (
-            <Reveal delay={100} style={{ display: 'grid' }}>
+            <div style={{ display: 'grid' }}>
               <video
                 className="about-video"
                 controls
@@ -50,14 +49,14 @@ export default function About() {
                 <source src={videoUrls.aboutVideo} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            </Reveal>
+            </div>
           )}
         </div>
       </section>
 
       <section className="section section-alt">
         <div className="container history">
-          <Reveal>
+          <div>
             <h2>History</h2>
             <p>
               Ash-lee Motors has been serving the community for years, building trust through consistent,
@@ -76,8 +75,8 @@ export default function About() {
               Today, we continue to invest in the latest diagnostic equipment and training, ensuring we can handle everything
               from routine maintenance to the most complex fault-finding challenges.
             </p>
-          </Reveal>
-          <Reveal delay={100} className="history-photos">
+          </div>
+          <div className="history-photos">
             <figure>
               <div className="team-photo">
                 <Img name="JFS_2582" alt="The Ash-lee Motors team in the workshop" sizes="(min-width: 960px) 40vw, 100vw" />
@@ -85,25 +84,25 @@ export default function About() {
             </figure>
             <figure className="heritage">
               <img src="/assets/grandpa.png" width="194" height="113" alt="Ash-lee Motors team" loading="lazy" decoding="async" />
-              <p>Over 3 generations of a grassroots family run business.</p>
+              <figcaption>Over 3 generations of a grassroots family run business.</figcaption>
             </figure>
-          </Reveal>
+          </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <Reveal className="section-head">
+          <div className="section-head">
             <h2>Why Choose Us</h2>
-          </Reveal>
-          <Reveal className="feature-grid">
+          </div>
+          <dl className="reasons">
             {reasons.map(r => (
-              <div className="feature" key={r.title}>
-                <h3>{r.title}</h3>
-                <p>{r.text}</p>
+              <div key={r.title}>
+                <dt>{r.title}</dt>
+                <dd>{r.text}</dd>
               </div>
             ))}
-          </Reveal>
+          </dl>
         </div>
       </section>
     </>
