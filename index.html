@@ -8,7 +8,20 @@
     
     <!-- Resource Hints -->
     <link rel="dns-prefetch" href="https://wa.me">
-    <link rel="preload" as="image" href="/assets/img/JFS_2360-960.webp" imagesrcset="/assets/img/JFS_2360-480.webp 480w, /assets/img/JFS_2360-960.webp 960w, /assets/img/JFS_2360-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
+    <script>
+      // Preload this route's LCP photo (the hero / page-header image) before the JS arrives.
+      // Keep in step with the image names in Home.jsx and PageHeader usages, and the sizes there.
+      (function () {
+        var img = { '/': 'JFS_2360', '/services': 'JFS_2087', '/about': 'JFS_2354', '/gallery': 'JFS_2172', '/contact': 'JFS_2360' }[location.pathname.replace(/\/$/, '') || '/'];
+        if (!img) return;
+        var l = document.createElement('link'), p = '/assets/img/' + img + '-';
+        l.rel = 'preload'; l.as = 'image'; l.setAttribute('fetchpriority', 'high');
+        l.setAttribute('imagesrcset', p + '480.webp 480w, ' + p + '960.webp 960w, ' + p + '1600.webp 1600w');
+        l.setAttribute('imagesizes', location.pathname === '/' ? '100vw' : '(max-width: 767px) 60vw, 100vw');
+        l.href = p + '960.webp';
+        document.head.appendChild(l);
+      })();
+    </script>
     <meta name="theme-color" content="#0D0D0D">
   </head>
   <body>
