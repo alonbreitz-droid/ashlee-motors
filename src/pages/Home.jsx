@@ -1,265 +1,204 @@
-import React, { useState } from "react";
-import ScrollAnimation from "../components/ScrollAnimation";
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import Reveal from "../components/Reveal";
+import Img, { srcFor, srcSetFor } from "../components/Img";
+import Icon from "../components/Icon";
+import ContactButtons from "../components/ContactButtons";
 import { videoUrls } from "../config/videoUrls";
+import { specializedServices, generalServices, primary, address, hours } from "../data/business";
+
+const tabs = [
+  { id: 'specialized', label: 'Specialized Services', items: specializedServices },
+  { id: 'general', label: 'General Services', items: generalServices },
+];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('specialized');
+  const [playVideo, setPlayVideo] = useState(false);
+  const tabRefs = useRef([]);
+  const services = tabs.find(t => t.id === activeTab).items;
 
-  // Unique images for Home page service cards - different from Services page
-  const homeServiceImages = {
-    'Computer Diagnostics': 'JFS_2548.jpeg',
-    'Engine & Gearbox': 'JFS_2302.jpeg',
-    'Clutch & Brakes': 'JFS_2375.jpeg',
-    'Auto-Electrical': 'JFS_2246.jpeg',
-    'Air-Con & Cooling': 'JFS_2315.jpeg',
-    'Fleet Care': 'JFS_2510.jpeg'
+  // The hero video is decoration: skip it for reduced motion and data saver
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = navigator.connection && navigator.connection.saveData;
+    setPlayVideo(!reduce && !saveData && !!videoUrls.heroVideo);
+  }, []);
+
+  const onTabKey = (e, i) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    setActiveTab(tabs[next].id);
+    tabRefs.current[next]?.focus();
   };
 
-  const specializedServices = [
-    {
-      title: 'Computer Diagnostics',
-      description: 'Dealer-level tools for all major brands. Fault code reading, live-data analysis, coding & resets.',
-      image: '/assets/GT-LTDM2-1_600x.jpg.webp',
-      buttonText: 'Call for diagnostic'
-    },
-    {
-      title: 'Engine & Gearbox',
-      description: 'Repairs, replacements and services for engines and manual/auto gearboxes. Timing sets and seals.',
-                    image: `/assets/gallery/optimized/${homeServiceImages['Engine & Gearbox']}`,
-      buttonText: 'Get a quote'
-    },
-    {
-      title: 'Clutch & Brakes',
-      description: 'Clutch kits, hydraulics, discs & pads, ABS fault-finding and brake fluid flushes.',
-      image: `/assets/gallery/${homeServiceImages['Clutch & Brakes']}`,
-      buttonText: 'Book inspection'
-    },
-    {
-      title: 'Auto-Electrical',
-      description: 'Starters, alternators, wiring repairs, parasitic drain tests, ECU/BCM coding and resets.',
-      image: `/assets/gallery/${homeServiceImages['Auto-Electrical']}`,
-      buttonText: 'Fix electrical issue'
-    },
-    {
-      title: 'Air-Con & Cooling',
-      description: 'Regas, pressure tests, compressors, condensers, radiators, thermostats & cooling diagnostics.',
-      image: `/assets/gallery/${homeServiceImages['Air-Con & Cooling']}`,
-      buttonText: 'Regas or repair'
-    },
-    {
-      title: 'Fleet Care',
-      description: 'Priority booking, preventative schedules, consolidated invoicing and digital service records.',
-      image: '/assets/gallery/optimized/JFS_2340.jpeg',
-      buttonText: 'Enquire about fleet'
-    }
-  ];
-
-  const generalServices = [
-    {
-      title: 'Oil Changes & Service',
-      description: 'Regular oil changes, filter replacements, and scheduled maintenance to keep your vehicle running smoothly.',
-      image: '/assets/gallery/optimized/JFS_2201.jpeg',
-      buttonText: 'Book service'
-    },
-    {
-      title: 'Emergency Light & Spotlight Fitment',
-      description: 'Professional installation of emergency lights, spotlights, and auxiliary lighting systems for vehicles.',
-      image: '/assets/elfit.jpg',
-      buttonText: 'Get a quote'
-    },
-    {
-      title: 'Battery Services',
-      description: 'Battery testing, replacement, and charging system diagnostics to keep you on the road.',
-      image: '/assets/gallery/optimized/JFS_2127.jpeg',
-      buttonText: 'Test battery'
-    },
-    {
-      title: 'Vehicle Inspections',
-      description: 'Comprehensive vehicle inspections, pre-purchase checks, and roadworthy certifications.',
-      image: '/assets/gallery/optimized/JFS_2268.jpeg',
-      buttonText: 'Book inspection'
-    },
-    {
-      title: 'General Repairs',
-      description: 'All general automotive repairs and maintenance work performed by experienced technicians.',
-      image: '/assets/gallery/optimized/JFS_2187.jpeg',
-      buttonText: 'Get a quote'
-    },
-    {
-      title: 'Recovery Services',
-      description: 'Vehicle recovery and roadside assistance to get you back on the road quickly and safely.',
-      image: '/assets/gallery/optimized/JFS_2343.jpeg',
-      buttonText: 'Call recovery'
-    }
-  ];
-
   return (
-    <main>
+    <>
       {/* HERO */}
-      <section className="hero">
-        <video 
-          className="hero-video" 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
-          preload="auto"
-          poster="/assets/gallery/optimized/JFS_2360.jpeg"
-          style={{
-            objectPosition: 'center center'
-          }}
-        >
-          <source src={videoUrls.heroVideo} type="video/mp4" />
-        </video>
-        <div className="hero-overlay"></div>
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-media" aria-hidden="true">
+          <img
+            src={srcFor('JFS_2360', 960)}
+            srcSet={srcSetFor('JFS_2360')}
+            sizes="100vw"
+            alt=""
+            fetchpriority="high"
+            decoding="sync"
+          />
+          {playVideo && (
+            <video
+              className="hero-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              poster={srcFor('JFS_2360', 960)}
+            >
+              <source src={videoUrls.heroVideo} type="video/mp4" />
+            </video>
+          )}
+        </div>
         <div className="container hero-content">
-          <img src="/assets/logo.PNG" alt="Ash-Lee Motors" className="hero-logo" />
-          <h1>Our Perfection is Your Protection</h1>
-          <p className="lead">
+          <img
+            src="/assets/img/logo-192.webp"
+            srcSet="/assets/img/logo-192.webp 1x, /assets/img/logo-384.webp 2x"
+            width="132"
+            height="118"
+            alt="Ash-Lee Motors"
+            className="hero-logo rise"
+          />
+          <p className="eyebrow rise rise-2">Diagnostics &amp; Repairs · {address.area}</p>
+          <h1 id="hero-title" className="rise rise-3">Our Perfection is <em>Your Protection</em></h1>
+          <p className="lead rise rise-4">
             From fault-finding to full repairs—engines, gearboxes, clutches, auto-electrical &amp; more.
           </p>
-          <div className="actions">
-            <a className="btn btn-primary btn-lg" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
-              WhatsApp us
-            </a>
-            <a className="btn btn-secondary btn-lg" href="tel:0787764024">Call 078 776 4024</a>
+          <div className="rise rise-5">
+            <ContactButtons size="btn-lg" whatsappLabel="WhatsApp us" callLabel={`Call ${primary.display}`} />
           </div>
+          <dl className="hero-facts rise rise-5">
+            <div><dt>Experience</dt><dd>70+ years combined</dd></div>
+            <div><dt>Open</dt><dd>Mon–Fri {hours[0].time}</dd></div>
+            <div><dt>Find us</dt><dd>{address.street}, Wynberg</dd></div>
+          </dl>
         </div>
       </section>
 
       {/* SERVICES GRID */}
-      <section className="section">
+      <section className="section" aria-labelledby="services-title">
         <div className="container">
-          <ScrollAnimation>
-            <h2>Our Services</h2>
-          </ScrollAnimation>
-          
-          <div className="gallery-filters" style={{marginBottom: 'var(--space-6)'}}>
-            <button
-              className={`filter-btn ${activeTab === 'specialized' ? 'active' : ''}`}
-              onClick={() => setActiveTab('specialized')}
-            >
-              Specialized Services
-            </button>
-            <button
-              className={`filter-btn ${activeTab === 'general' ? 'active' : ''}`}
-              onClick={() => setActiveTab('general')}
-            >
-              General Services
-            </button>
+          <Reveal className="section-head">
+            <div>
+              <p className="eyebrow">What we do</p>
+              <h2 id="services-title">Our Services</h2>
+            </div>
+            <Link to="/services" className="text-link">All service details <Icon name="arrow" size={18} /></Link>
+          </Reveal>
+
+          <div className="tabs" role="tablist" aria-label="Service type">
+            {tabs.map((t, i) => (
+              <button
+                key={t.id}
+                ref={el => (tabRefs.current[i] = el)}
+                role="tab"
+                id={`tab-${t.id}`}
+                aria-selected={activeTab === t.id}
+                aria-controls="services-panel"
+                tabIndex={activeTab === t.id ? 0 : -1}
+                className="tab"
+                onClick={() => setActiveTab(t.id)}
+                onKeyDown={(e) => onTabKey(e, i)}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
 
-          <div className="grid grid-3 mt-4">
-            {(activeTab === 'specialized' ? specializedServices : generalServices).map((service, index) => (
-              <ScrollAnimation key={index} delay={index * 100}>
-                <article className="card service-card">
-                <div className="service-card-image-wrapper">
-                  <img 
-                    src={service.image.startsWith('/assets/gallery/') && !service.image.includes('optimized') 
-                      ? service.image.replace('/assets/gallery/', '/assets/gallery/optimized/')
-                      : service.image} 
-                    alt={service.title}
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority={index < 3 ? "high" : "low"}
-                    style={{
-                      width: '100%',
-                      height: '180px',
-                      objectFit: 'cover',
-                      borderRadius: 'var(--radius-8)',
-                      marginBottom: 'var(--space-4)',
-                      transition: 'opacity 0.3s ease, transform 0.3s ease'
-                    }}
-                    onError={(e) => {
-                      // Fallback to original if optimized doesn't exist
-                      if (e.target.src.includes('optimized')) {
-                        e.target.src = e.target.src.replace('/optimized/', '/');
-                      }
-                    }}
-                  />
-                  <div className="service-card-overlay">
-                    <a 
-                      className="btn btn-primary btn-sm" 
-                      href="https://wa.me/27787764024" 
-                      target="_blank" 
-                      rel="noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Quick WhatsApp
-                    </a>
+          <div className="grid grid-3" id="services-panel" role="tabpanel" aria-labelledby={`tab-${activeTab}`}>
+            {services.map((service, index) => (
+              <Reveal key={service.title} delay={(index % 3) * 80}>
+                <article className="service-card">
+                  <div className={`service-card-media ${service.contain ? 'contain' : ''}`}>
+                    <Img name={service.image} alt="" sizes="(min-width: 1024px) 400px, (min-width: 720px) 50vw, 100vw" />
+                    <span className="service-card-num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                   </div>
-                </div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <div className="service-card-actions" style={{display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', marginTop: 'auto'}}>
-                  <a className="btn btn-primary btn-sm" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">
-                    WhatsApp
-                  </a>
-                  <a className="btn btn-secondary btn-sm" href="tel:0787764024">Call</a>
-                </div>
-              </article>
-              </ScrollAnimation>
+                  <div className="service-card-body">
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                    <ContactButtons size="btn-sm" />
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* WHY SECTION */}
-      <section className="section">
-        <div className="container">
-          <h2>Why Ash-lee Motors</h2>
-          <div className="grid grid-2 mt-4">
-            <ul className="card" style={{listStyle: 'none', padding: 'var(--space-6)'}}>
-              <li><strong>70+ years' combined experience</strong> across diagnostics, mechanical and auto-electrical.</li>
-              <li className="mt-3"><strong>Honest quotes &amp; clear explanations</strong> before any work begins.</li>
-              <li className="mt-3"><strong>Quality parts &amp; workmanship</strong> backed by warranty.</li>
-              <li className="mt-3"><strong>Quick turnarounds</strong> with same-day diagnostics available.</li>
-            </ul>
-            <div className="card">
-              <p className="mt-0"><strong>Trusted locally.</strong> We service all major brands and accept Card &amp; EFT.</p>
-              <div className="trust-strip mt-3">
-                <span>All Major Brands</span>
-                <span>Card &amp; EFT</span>
-                <span>Quality Service</span>
-              </div>
+      <section className="section section-alt" aria-labelledby="why-title">
+        <div className="container why">
+          <Reveal className="why-media">
+            <Img name="JFS_2473" alt="An Ash-lee Motors mechanic in the workshop" sizes="(min-width: 960px) 45vw, 100vw" />
+            <div className="why-badge">
+              <strong>70+</strong>
+              <span>Years' combined experience</span>
             </div>
-          </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <p className="eyebrow">Trusted locally</p>
+            <h2 id="why-title">Why Ash-lee Motors</h2>
+            <ul className="why-list">
+              <li><span className="num">01</span><p><strong>70+ years' combined experience</strong> across diagnostics, mechanical and auto-electrical.</p></li>
+              <li><span className="num">02</span><p><strong>Honest quotes &amp; clear explanations</strong> before any work begins.</p></li>
+              <li><span className="num">03</span><p><strong>Quality parts &amp; workmanship</strong> backed by warranty.</p></li>
+              <li><span className="num">04</span><p><strong>Quick turnarounds</strong> with same-day diagnostics available.</p></li>
+            </ul>
+            <p className="mt-6"><strong>Trusted locally.</strong> We service all major brands and accept Card &amp; EFT.</p>
+            <ul className="chips">
+              <li className="chip"><Icon name="check" size={16} />All Major Brands</li>
+              <li className="chip"><Icon name="check" size={16} />Card &amp; EFT</li>
+              <li className="chip"><Icon name="check" size={16} />Quality Service</li>
+            </ul>
+          </Reveal>
         </div>
       </section>
 
       {/* REVIEWS */}
-      <section className="section">
+      <section className="section" aria-labelledby="reviews-title">
         <div className="container">
-          <h2>What Local Drivers Say</h2>
-          <div className="grid grid-3 mt-4">
-            <blockquote className="review">
-              "Found the fault in one visit and had me back on the road the same day."<br/>— <em>Thabo M.</em>
-            </blockquote>
-            <blockquote className="review">
-              "Straightforward pricing and great communication."<br/>— <em>Sarah P.</em>
-            </blockquote>
-            <blockquote className="review">
-              "They fixed a persistent electrical drain no one else could."<br/>— <em>Gareth D.</em>
-            </blockquote>
+          <Reveal className="section-head">
+            <div>
+              <p className="eyebrow">Reviews</p>
+              <h2 id="reviews-title">What Local Drivers Say</h2>
+            </div>
+          </Reveal>
+          <div className="grid grid-3">
+            {[
+              ['Found the fault in one visit and had me back on the road the same day.', 'Thabo M.'],
+              ['Straightforward pricing and great communication.', 'Sarah P.'],
+              ['They fixed a persistent electrical drain no one else could.', 'Gareth D.'],
+            ].map(([quote, name], i) => (
+              <Reveal key={name} delay={i * 80}>
+                <figure className="review">
+                  <blockquote><p>{quote}</p></blockquote>
+                  <figcaption>— {name}</figcaption>
+                </figure>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA BAND */}
-      <section className="section" style={{paddingTop: 0}}>
-        <div className="container card">
-          <div className="grid grid-2">
-            <div>
-              <h3 className="mt-0">Need a same-day diagnostic?</h3>
-              <p className="mt-2">WhatsApp us now or call 078 776 4024.</p>
-            </div>
-            <div style={{display:"flex", gap:"12px", alignItems:"center", justifyContent:"flex-end", flexWrap: "wrap"}}>
-              <a className="btn btn-primary" href="https://wa.me/27787764024" target="_blank" rel="noreferrer">WhatsApp</a>
-              <a className="btn btn-secondary" href="tel:0787764024">Call</a>
-            </div>
+      <section className="cta-band" aria-labelledby="cta-title">
+        <div className="container cta-band-inner">
+          <div>
+            <h2 id="cta-title">Need a same-day diagnostic?</h2>
+            <p>WhatsApp us now or call {primary.display}.</p>
           </div>
+          <ContactButtons size="btn-lg" />
         </div>
       </section>
-    </main>
+    </>
   );
 }

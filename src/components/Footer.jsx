@@ -1,46 +1,55 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { phones, email, address, hours } from '../data/business';
 
 export default function Footer() {
   return (
-    <footer>
+    <footer className="site-footer">
       <div className="container">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h4>Contact</h4>
-            <p>16 4th Street, Wynberg, Sandton</p>
-            <a href="mailto:info@ash-leemotors.co.za">info@ash-leemotors.co.za</a>
-            <p>
-              <a href="https://wa.me/27787764024" target="_blank" rel="noreferrer">078 776 4024 (WhatsApp)</a>
-              {' '}
-              <a href="tel:0787764024">Call</a>
-            </p>
-            <p>
-              <a href="https://wa.me/27789996243" target="_blank" rel="noreferrer">078 999 6243 (WhatsApp)</a>
-              {' '}
-              <a href="tel:0789996243">Call</a>
-            </p>
-            <p>
-              <a href="https://wa.me/27788034782" target="_blank" rel="noreferrer">078 803 4782 (WhatsApp)</a>
-              {' '}
-              <a href="tel:0788034782">Call</a>
-            </p>
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <img src="/assets/img/logo-192.webp" width="72" height="65" alt="Ash-Lee Motors" loading="lazy" />
+            <p className="tagline">Our Perfection is Your Protection</p>
           </div>
-          <div className="footer-section">
-            <h4>Hours</h4>
-            <p>Monday - Friday</p>
-            <p>08:00 - 17:00</p>
+
+          <div>
+            <h2 className="footer-heading">Contact</h2>
+            <ul className="footer-list">
+              <li>{address.street}, {address.area}</li>
+              <li><a href={`mailto:${email}`}>{email}</a></li>
+              {phones.map(p => (
+                <li key={p.tel} className="footer-phone">
+                  <span className="num">{p.display}</span>
+                  <a href={p.whatsapp} target="_blank" rel="noreferrer" aria-label={`WhatsApp ${p.display}`}>WhatsApp</a>
+                  <a href={p.tel} aria-label={`Call ${p.display}`}>Call</a>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="footer-section">
-            <h4>Trust</h4>
-            <p>We service all major brands</p>
-            <p>Card & EFT payments accepted</p>
-            <p>Quality service guaranteed</p>
+
+          <div>
+            <h2 className="footer-heading">Hours</h2>
+            <ul className="footer-list">
+              <li>{hours[0].day}</li>
+              <li>{hours[0].time}</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="footer-heading">Trust</h2>
+            <ul className="footer-list">
+              <li>We service all major brands</li>
+              <li>Card &amp; EFT payments accepted</li>
+              <li>Quality service guaranteed</li>
+            </ul>
           </div>
         </div>
-        <div style={{textAlign: 'center', marginTop: 'var(--space-6)', paddingTop: 'var(--space-6)', borderTop: '1px solid rgba(255, 255, 255, 0.1)'}}>
-          <p style={{color: 'rgba(255, 255, 255, 0.7)', fontSize: 'var(--font-size-sm)'}}>
+
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Ash-lee Motors · <Link to="/contact">Find us</Link></p>
+          <p>
             Proudly built and designed by{' '}
-            <a href="https://pritchard-solutions.com" target="_blank" rel="noreferrer" style={{color: 'rgba(255, 255, 255, 0.9)', textDecoration: 'underline'}}>
+            <a href="https://pritchard-solutions.com" target="_blank" rel="noreferrer">
               Pritchard Specialized Solutions
             </a>
           </p>
@@ -49,4 +58,3 @@ export default function Footer() {
     </footer>
   );
 }
-

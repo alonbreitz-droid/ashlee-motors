@@ -1,278 +1,192 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import PageHeader from '../components/PageHeader';
+import Img, { srcFor } from '../components/Img';
+import Icon from '../components/Icon';
 
 export default function Gallery() {
   const [activeFilter, setActiveFilter] = useState('all');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const closeRef = useRef(null);
+  const openerRef = useRef(null);
+  const touchX = useRef(null);
 
-  const filters = [
-    { id: 'all', label: 'All' },
-    { id: 'mechanical', label: 'Mechanical' },
-    { id: 'diagnostics', label: 'Diagnostics' },
-    { id: 'electrical', label: 'Auto-Electrical' },
-    { id: 'service', label: 'General Service' }
-  ];
-
-  // All gallery images - EXCLUDING images used on other pages
-  // Removed: JFS_2246 (Auto-Electrical), JFS_2302 (Engine & Gearbox), JFS_2315 (Air-Con), 
-  // JFS_2340 (Fleet Care), JFS_2354 (About hero), JFS_2375 (Clutch & Brakes), JFS_2510-2592 (Home & Services)
-  const allImages = [
-    'JFS_2082.jpeg', 'JFS_2087.jpeg', 'JFS_2089.jpeg', 'JFS_2092.jpeg', 'JFS_2097.jpeg',
-    'JFS_2098.jpeg', 'JFS_2100.jpeg', 'JFS_2102.jpeg', 'JFS_2107.jpeg', 'JFS_2109-2.jpeg',
-    'JFS_2117.jpeg', 'JFS_2119.jpeg', 'JFS_2121.jpeg', 'JFS_2122.jpeg',
-    'JFS_2134.jpeg', 'JFS_2138.jpeg', 'JFS_2148.jpeg', 'JFS_2154.jpeg', 'JFS_2159.jpeg',
-    'JFS_2167.jpeg', 'JFS_2170.jpeg', 'JFS_2172.jpeg', 'JFS_2187.jpeg', 'JFS_2189.jpeg',
-    'JFS_2191.jpeg', 'JFS_2195.jpeg', 'JFS_2199.jpeg', 'JFS_2201.jpeg', 'JFS_2202.jpeg',
-    'JFS_2210.jpeg', 'JFS_2222.jpeg', 'JFS_2234.jpeg', 'JFS_2237.jpeg', 'JFS_2241.jpeg',
-    'JFS_2248-2.jpeg', 'JFS_2253.jpeg', 'JFS_2265.jpeg',
-    'JFS_2291.jpeg', 'JFS_2296.jpeg', 'JFS_2312.jpeg',
-    'JFS_2336.jpeg', 'JFS_2351.jpeg', 'JFS_2352.jpeg',
-    'JFS_2368.jpeg', 'JFS_2392.jpeg',
-    'JFS_2409.jpeg', 'JFS_2415.jpeg', 'JFS_2416.jpeg', 'JFS_2418.jpeg', 'JFS_2426.jpeg',
-    'JFS_2427.jpeg', 'JFS_2432.jpeg', 'JFS_2434.jpeg', 'JFS_2437.jpeg', 'JFS_2441-2.jpeg',
-    'JFS_2441.jpeg', 'JFS_2449-2.jpeg', 'JFS_2449.jpeg', 'JFS_2451-2.jpeg', 'JFS_2451.jpeg',
-    'JFS_2452.jpeg', 'JFS_2456.jpeg', 'JFS_2458.jpeg', 'JFS_2462.jpeg', 'JFS_2473.jpeg',
-    'JFS_2475.jpeg', 'JFS_2481.jpeg', 'JFS_2486.jpeg', 'JFS_2499.jpeg', 'JFS_2503.jpeg',
-    'JFS_2506.jpeg', 'JFS_2579-2.jpeg', 'JFS_2582-2.jpeg', 'JFS_2590.jpeg'
-  ];
-
-  // Categorize images based on service types
-  // Each image belongs to only one category (priority: specific > general)
-  const imageCategoryMap = {
-    // Diagnostics (Computer Diagnostics, Diagnostic Equipment) - Most specific
-    'JFS_2119.jpeg': 'diagnostics',
-    'JFS_2121.jpeg': 'diagnostics',
-    'JFS_2134.jpeg': 'diagnostics',
-    'JFS_2148.jpeg': 'diagnostics',
-    'JFS_2191.jpeg': 'diagnostics',
-    'JFS_2234.jpeg': 'diagnostics',
-    'JFS_2291.jpeg': 'diagnostics',
-    'JFS_2312.jpeg': 'diagnostics',
-    'JFS_2409.jpeg': 'diagnostics',
-    'JFS_2432.jpeg': 'diagnostics',
-    'JFS_2441-2.jpeg': 'diagnostics',
-    'JFS_2451-2.jpeg': 'diagnostics',
-    
-    // Auto-Electrical (Electrical Work, Battery, Wiring)
-    'JFS_2117.jpeg': 'electrical',
-    'JFS_2122.jpeg': 'electrical',
-    'JFS_2138.jpeg': 'electrical',
-    'JFS_2154.jpeg': 'electrical',
-    'JFS_2167.jpeg': 'electrical',
-    'JFS_2170.jpeg': 'electrical',
-    'JFS_2172.jpeg': 'electrical',
-    'JFS_2195.jpeg': 'electrical',
-    'JFS_2222.jpeg': 'electrical',
-    'JFS_2237.jpeg': 'electrical',
-    'JFS_2241.jpeg': 'electrical',
-    'JFS_2248-2.jpeg': 'electrical',
-    'JFS_2253.jpeg': 'electrical',
-    'JFS_2296.jpeg': 'electrical',
-    'JFS_2336.jpeg': 'electrical',
-    'JFS_2352.jpeg': 'electrical',
-    'JFS_2418.jpeg': 'electrical',
-    'JFS_2426.jpeg': 'electrical',
-    'JFS_2427.jpeg': 'electrical',
-    'JFS_2434.jpeg': 'electrical',
-    'JFS_2437.jpeg': 'electrical',
-    'JFS_2449-2.jpeg': 'electrical',
-    'JFS_2451.jpeg': 'electrical',
-    'JFS_2452.jpeg': 'electrical',
-    'JFS_2456.jpeg': 'electrical',
-    'JFS_2458.jpeg': 'electrical',
-    'JFS_2462.jpeg': 'electrical',
-    'JFS_2473.jpeg': 'electrical',
-    'JFS_2475.jpeg': 'electrical',
-    'JFS_2481.jpeg': 'electrical',
-    'JFS_2486.jpeg': 'electrical',
-    'JFS_2499.jpeg': 'electrical',
-    'JFS_2503.jpeg': 'electrical',
-    'JFS_2506.jpeg': 'electrical',
-    'JFS_2579-2.jpeg': 'electrical',
-    'JFS_2582-2.jpeg': 'electrical',
-    
-    // Air-Con & Cooling images reassigned to Mechanical
-    'JFS_2082.jpeg': 'mechanical',
-    'JFS_2087.jpeg': 'mechanical',
-    'JFS_2092.jpeg': 'mechanical',
-    'JFS_2097.jpeg': 'mechanical',
-    'JFS_2098.jpeg': 'mechanical',
-    'JFS_2100.jpeg': 'mechanical',
-    'JFS_2102.jpeg': 'mechanical',
-    'JFS_2107.jpeg': 'mechanical',
-    'JFS_2159.jpeg': 'mechanical',
-    'JFS_2189.jpeg': 'mechanical',
-    'JFS_2199.jpeg': 'mechanical',
-    'JFS_2210.jpeg': 'mechanical',
-    'JFS_2265.jpeg': 'mechanical',
-    'JFS_2351.jpeg': 'mechanical',
-    'JFS_2368.jpeg': 'mechanical',
-    'JFS_2392.jpeg': 'mechanical',
-    'JFS_2415.jpeg': 'mechanical',
-    'JFS_2416.jpeg': 'mechanical',
-    'JFS_2441.jpeg': 'mechanical',
-    'JFS_2449.jpeg': 'mechanical',
-    'JFS_2590.jpeg': 'mechanical',
-    
-    // General Service (Oil Changes, Inspections, Maintenance)
-    'JFS_2201.jpeg': 'service',
-    'JFS_2187.jpeg': 'service',
-    'JFS_2109-2.jpeg': 'service',
-    'JFS_2202.jpeg': 'service',
-    
-    // Mechanical (Engine, Gearbox, Clutch, Brakes, General Repairs) - Default for remaining
-    // All other images default to mechanical
-  };
-
-  // Create categorized images array
-  const categorizedImages = allImages.map((image, index) => ({
-    id: index,
-    filename: image,
-    category: imageCategoryMap[image] || 'mechanical'
-  }));
-
-  const filteredImages = activeFilter === 'all' 
-    ? categorizedImages 
-    : categorizedImages.filter(item => item.category === activeFilter);
-
-  const openModal = (image) => {
-    setSelectedImage(image);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-  };
-
-  const navigateImage = (direction) => {
-    const currentIndex = filteredImages.findIndex(img => img.filename === selectedImage.filename);
-    let newIndex;
-    
-    if (direction === 'next') {
-      newIndex = (currentIndex + 1) % filteredImages.length;
-    } else {
-      newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+  // Photos grouped by what they show, one frame per burst. Order within a group is the display order.
+  const groups = [
+    {
+      id: 'repairs',
+      label: 'Repairs & Service',
+      images: ['JFS_2087', 'JFS_2199', 'JFS_2265', 'JFS_2237', 'JFS_2201', 'JFS_2291', 'JFS_2098', 'JFS_2392',
+        'JFS_2296', 'JFS_2191', 'JFS_2195', 'JFS_2336', 'JFS_2312', 'JFS_2368', 'JFS_2082', 'JFS_2187',
+        'JFS_2253', 'JFS_2100', 'JFS_2248-2']
+    },
+    {
+      id: 'engines',
+      label: 'Engine Builds',
+      images: ['JFS_2107', 'JFS_2148', 'JFS_2121', 'JFS_2117', 'JFS_2159', 'JFS_2154', 'JFS_2138']
+    },
+    {
+      id: 'workshop',
+      label: 'The Workshop',
+      images: ['JFS_2352', 'JFS_2102', 'JFS_2172', 'JFS_2134', 'JFS_2210', 'JFS_2351', 'JFS_2222', 'JFS_2167',
+        'JFS_2170', 'JFS_2409']
+    },
+    {
+      id: 'team',
+      label: 'The Team',
+      images: ['JFS_2582-2', 'JFS_2473', 'JFS_2416', 'JFS_2503', 'JFS_2434', 'JFS_2486', 'JFS_2590', 'JFS_2451',
+        'JFS_2506', 'JFS_2481', 'JFS_2441', 'JFS_2499', 'JFS_2458', 'JFS_2452', 'JFS_2475', 'JFS_2579-2']
     }
-    
-    setSelectedImage(filteredImages[newIndex]);
-  };
+  ];
+  // Near-duplicate frames from the same bursts, held back to keep the grid varied.
+  // Move any of these into a group above to show it again.
+  // 'JFS_2089', 'JFS_2092', 'JFS_2097', 'JFS_2109-2', 'JFS_2119', 'JFS_2122', 'JFS_2189', 'JFS_2202',
+  // 'JFS_2234', 'JFS_2241', 'JFS_2415', 'JFS_2418', 'JFS_2426', 'JFS_2427', 'JFS_2432', 'JFS_2437',
+  // 'JFS_2441-2', 'JFS_2449', 'JFS_2449-2', 'JFS_2451-2', 'JFS_2456', 'JFS_2462'
+
+  const filters = [{ id: 'all', label: 'All' }, ...groups.map(g => ({ id: g.id, label: g.label }))];
+
+  const visibleGroups = activeFilter === 'all' ? groups : groups.filter(g => g.id === activeFilter);
+
+  // Flat list across the visible groups, so the lightbox can step through everything on screen
+  const filteredImages = visibleGroups.flatMap(g => g.images.map(name => ({ name, category: g.id })));
+  const indexOf = (name) => filteredImages.findIndex(img => img.name === name);
+
+  const labelFor = (id) => groups.find(g => g.id === id).label;
+
+  const selectedImage = selectedIndex === null ? null : filteredImages[selectedIndex];
+
+  const closeModal = useCallback(() => {
+    setSelectedIndex(null);
+    openerRef.current?.focus();
+  }, []);
+
+  const step = useCallback((dir) => {
+    setSelectedIndex(i => (i + dir + filteredImages.length) % filteredImages.length);
+  }, [filteredImages.length]);
 
   useEffect(() => {
-    if (!selectedImage) return;
-    
+    if (selectedIndex === null) return undefined;
+    closeRef.current?.focus();
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setSelectedImage(null);
-      } else if (e.key === 'ArrowRight') {
-        const currentIndex = filteredImages.findIndex(img => img.filename === selectedImage.filename);
-        const newIndex = (currentIndex + 1) % filteredImages.length;
-        setSelectedImage(filteredImages[newIndex]);
-      } else if (e.key === 'ArrowLeft') {
-        const currentIndex = filteredImages.findIndex(img => img.filename === selectedImage.filename);
-        const newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
-        setSelectedImage(filteredImages[newIndex]);
+      if (e.key === 'Escape') closeModal();
+      else if (e.key === 'ArrowRight') step(1);
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === 'Tab') {
+        // keep focus inside the lightbox
+        const els = [...document.querySelectorAll('.lightbox button')];
+        const i = els.indexOf(document.activeElement);
+        if (e.shiftKey && i <= 0) { e.preventDefault(); els[els.length - 1].focus(); }
+        else if (!e.shiftKey && i === els.length - 1) { e.preventDefault(); els[0].focus(); }
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage, filteredImages]);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [selectedIndex === null, closeModal, step]);
+
+  // Preload the neighbours so next/prev feel instant
+  useEffect(() => {
+    if (selectedIndex === null) return;
+    [1, -1].forEach(d => {
+      const n = filteredImages[(selectedIndex + d + filteredImages.length) % filteredImages.length];
+      new Image().src = srcFor(n.name, 1600);
+    });
+  }, [selectedIndex, filteredImages]);
 
   return (
-    <main>
+    <>
+      <PageHeader eyebrow="Inside the workshop" title="Gallery" image="JFS_2172">
+        <p className="lead">Real work from our workshop in Wynberg, Sandton.</p>
+      </PageHeader>
+
       <section className="section">
         <div className="container">
-          <h1>Gallery</h1>
-          
-          <div className="gallery-filters">
+          <div className="tabs" role="group" aria-label="Filter photos">
             {filters.map(filter => (
               <button
                 key={filter.id}
-                className={`filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
+                className="tab"
+                aria-pressed={activeFilter === filter.id}
                 onClick={() => setActiveFilter(filter.id)}
               >
                 {filter.label}
               </button>
             ))}
           </div>
+          <p className="gallery-count" aria-live="polite">{filteredImages.length} photos</p>
 
-          <div className="gallery-grid">
-            {filteredImages.map((item) => (
-              <div 
-                key={item.id} 
-                className="gallery-item"
-                onClick={() => openModal(item)}
-              >
-                <img 
-                  src={`/assets/gallery/optimized/${item.filename}`} 
-                  alt={`Ash-lee Motors ${item.category}`}
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority={item.id < 6 ? "high" : "low"}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'opacity 0.3s ease-in-out'
-                  }}
-                />
+          {visibleGroups.map(group => (
+            <section key={group.id} className="gallery-group" aria-labelledby={`group-${group.id}`}>
+              <div className="gallery-group-head">
+                <h2 id={`group-${group.id}`}>{group.label}</h2>
+                <span>{group.images.length}</span>
               </div>
-            ))}
-          </div>
+              <ul className="gallery-grid">
+                {group.images.map(name => {
+                  const i = indexOf(name);
+                  return (
+                    <li key={name}>
+                      <button
+                        className="gallery-item"
+                        onClick={(e) => { openerRef.current = e.currentTarget; setSelectedIndex(i); }}
+                        aria-label={`Open photo ${i + 1}: ${group.label}`}
+                      >
+                        <Img name={name} alt="" sizes="(min-width: 1100px) 300px, (min-width: 720px) 33vw, 50vw" />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
 
           {filteredImages.length === 0 && (
-            <div style={{textAlign: 'center', padding: 'var(--space-8)'}}>
-              <p>No images found in this category.</p>
-            </div>
+            <p>No images found in this category.</p>
           )}
         </div>
       </section>
 
-      {/* Modal/Lightbox */}
       {selectedImage && (
-        <div 
-          className="gallery-modal" 
-          onClick={closeModal}
+        <div
+          className="lightbox"
           role="dialog"
           aria-modal="true"
           aria-label="Image gallery lightbox"
+          onClick={(e) => { if (e.target === e.currentTarget || e.target.classList.contains('lightbox-stage')) closeModal(); }}
+          onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => {
+            if (touchX.current === null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+            touchX.current = null;
+          }}
         >
-          <button 
-            className="gallery-modal-close" 
-            onClick={closeModal}
-            aria-label="Close gallery"
-          >
-            ×
-          </button>
-          <button 
-            className="gallery-modal-nav gallery-modal-prev" 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateImage('prev');
-            }}
-            aria-label="Previous image"
-          >
-            ‹
-          </button>
-          <img 
-            src={`/assets/gallery/optimized/${selectedImage.filename}`} 
-            alt={`Ash-lee Motors ${selectedImage.category} - Image ${filteredImages.findIndex(img => img.filename === selectedImage.filename) + 1} of ${filteredImages.length}`}
-            onClick={(e) => e.stopPropagation()}
-            loading="eager"
-          />
-          <div className="gallery-modal-info">
-            <span>{filteredImages.findIndex(img => img.filename === selectedImage.filename) + 1} / {filteredImages.length}</span>
+          <div className="lightbox-bar">
+            <span aria-live="polite">{labelFor(selectedImage.category)} · {selectedIndex + 1} / {filteredImages.length}</span>
+            <button ref={closeRef} className="icon-btn" onClick={closeModal} aria-label="Close gallery">
+              <Icon name="close" size={22} />
+            </button>
           </div>
-          <button 
-            className="gallery-modal-nav gallery-modal-next" 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateImage('next');
-            }}
-            aria-label="Next image"
-          >
-            ›
-          </button>
+          <div className="lightbox-stage">
+            <img
+              key={selectedImage.name}
+              src={srcFor(selectedImage.name, 1600)}
+              alt={`Ash-lee Motors ${labelFor(selectedImage.category)} - Image ${selectedIndex + 1} of ${filteredImages.length}`}
+            />
+          </div>
+          <div className="lightbox-nav">
+            <button className="icon-btn" onClick={() => step(-1)} aria-label="Previous image">
+              <Icon name="left" size={24} />
+            </button>
+            <button className="icon-btn" onClick={() => step(1)} aria-label="Next image">
+              <Icon name="right" size={24} />
+            </button>
+          </div>
         </div>
       )}
-    </main>
+    </>
   );
 }

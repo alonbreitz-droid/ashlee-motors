@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Icon from './Icon';
+import { primary, hours } from '../data/business';
+
+const links = [
+  { to: '/', label: 'Home' },
+  { to: '/services', label: 'Services' },
+  { to: '/about', label: 'About' },
+  { to: '/gallery', label: 'Gallery' },
+  { to: '/contact', label: 'Contact' },
+];
 
 export default function Navigation() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const toggleRef = useRef(null);
 
-  const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
-  };
+  const isActive = (path) => (location.pathname === path ? 'active' : '');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 8);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -23,62 +31,83 @@ export default function Navigation() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    if (!isMenuOpen) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setIsMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
     };
   }, [isMenuOpen]);
 
   return (
-    <nav className={isScrolled ? 'scrolled' : ''} style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
-      <div className="container nav-container">
-        <Link to="/" className="nav-brand" style={{display: 'flex', alignItems: 'center', gap: 'var(--space-3)'}}>
-          <img src="/assets/logo.PNG" alt="Ash-Lee Motors" className="nav-logo" />
-          <span style={{fontSize: 'var(--font-size-lg)', fontWeight: 'bold', color: 'var(--white)'}}>ASH-LEE MOTORS</span>
+    <nav className={`site-nav ${isScrolled ? 'scrolled' : ''}`} aria-label="Main">
+      <div className="container nav-inner">
+        <Link to="/" className="nav-brand" aria-label="Ash-Lee Motors home">
+          <img
+            src="/assets/img/logo-96.webp"
+            srcSet="/assets/img/logo-96.webp 1x, /assets/img/logo-192.webp 2x"
+            width="44"
+            height="40"
+            alt=""
+            className="nav-logo"
+          />
+          <span className="nav-wordmark">ASH-LEE MOTORS</span>
         </Link>
-        <button 
+
+        <ul className="nav-links">
+          {links.map(l => (
+            <li key={l.to}>
+              <Link to={l.to} className={isActive(l.to)} aria-current={isActive(l.to) ? 'page' : undefined}>
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <a className="btn btn-primary btn-sm nav-cta" href={primary.whatsapp} target="_blank" rel="noreferrer">
+          <Icon name="whatsapp" size={16} />WhatsApp us
+        </a>
+
+        <button
+          ref={toggleRef}
           className="nav-toggle"
-          aria-label="Toggle navigation menu"
+          aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <span className={isMenuOpen ? 'open' : ''}></span>
-          <span className={isMenuOpen ? 'open' : ''}></span>
-          <span className={isMenuOpen ? 'open' : ''}></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
-        <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-          <li>
-            <Link to="/" className={isActive('/')} onClick={() => setIsMenuOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/services" className={isActive('/services')} onClick={() => setIsMenuOpen(false)}>
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className={isActive('/about')} onClick={() => setIsMenuOpen(false)}>
-              About
-            </Link>
-          </li>
-          <li>
-            <Link to="/gallery" className={isActive('/gallery')} onClick={() => setIsMenuOpen(false)}>
-              Gallery
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className={isActive('/contact')} onClick={() => setIsMenuOpen(false)}>
-              Contact
-            </Link>
-          </li>
-        </ul>
+      </div>
+
+      <div id="mobile-menu" className={`mobile-menu ${isMenuOpen ? 'open' : ''}`} inert={isMenuOpen ? undefined : ''}>
+        <ol>
+          {links.map((l, i) => (
+            <li key={l.to}>
+              <Link to={l.to} className={isActive(l.to)} aria-current={isActive(l.to) ? 'page' : undefined} onClick={() => setIsMenuOpen(false)}>
+                <span>0{i + 1}</span>{l.label}
+              </Link>
+            </li>
+          ))}
+        </ol>
+        <div className="mobile-menu-foot">
+          <a className="btn btn-primary btn-lg" href={primary.whatsapp} target="_blank" rel="noreferrer">
+            <Icon name="whatsapp" size={20} />WhatsApp us
+          </a>
+          <a className="btn btn-ghost btn-lg" href={primary.tel}>
+            <Icon name="phone" size={20} />Call {primary.display}
+          </a>
+          <p>{hours[0].day} · {hours[0].time}</p>
+        </div>
       </div>
     </nav>
   );
 }
-
