@@ -1,22 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal";
 import Img, { srcFor, srcSetFor } from "../components/Img";
 import Icon from "../components/Icon";
 import ContactButtons from "../components/ContactButtons";
+import ServiceTabs, { serviceTabs } from "../components/ServiceTabs";
+import CtaBand from "../components/CtaBand";
 import { videoUrls } from "../config/videoUrls";
-import { specializedServices, generalServices, primary, address, hours } from "../data/business";
-
-const tabs = [
-  { id: 'specialized', label: 'Specialized Services', items: specializedServices },
-  { id: 'general', label: 'General Services', items: generalServices },
-];
+import { primary, address, hours } from "../data/business";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('specialized');
   const [playVideo, setPlayVideo] = useState(false);
-  const tabRefs = useRef([]);
-  const services = tabs.find(t => t.id === activeTab).items;
+  const services = serviceTabs.find(t => t.id === activeTab).items;
 
   // The hero video is decoration: skip it for reduced motion and data saver
   useEffect(() => {
@@ -24,13 +20,6 @@ export default function Home() {
     const saveData = navigator.connection && navigator.connection.saveData;
     setPlayVideo(!reduce && !saveData && !!videoUrls.heroVideo);
   }, []);
-
-  const onTabKey = (e, i) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-    setActiveTab(tabs[next].id);
-    tabRefs.current[next]?.focus();
-  };
 
   return (
     <>
@@ -88,31 +77,11 @@ export default function Home() {
       <section className="section" aria-labelledby="services-title">
         <div className="container">
           <Reveal className="section-head">
-            <div>
-              <p className="eyebrow">What we do</p>
-              <h2 id="services-title">Our Services</h2>
-            </div>
+            <h2 id="services-title">Our Services</h2>
             <Link to="/services" className="text-link">All service details <Icon name="arrow" size={18} /></Link>
           </Reveal>
 
-          <div className="tabs" role="tablist" aria-label="Service type">
-            {tabs.map((t, i) => (
-              <button
-                key={t.id}
-                ref={el => (tabRefs.current[i] = el)}
-                role="tab"
-                id={`tab-${t.id}`}
-                aria-selected={activeTab === t.id}
-                aria-controls="services-panel"
-                tabIndex={activeTab === t.id ? 0 : -1}
-                className="tab"
-                onClick={() => setActiveTab(t.id)}
-                onKeyDown={(e) => onTabKey(e, i)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <ServiceTabs active={activeTab} onChange={setActiveTab} />
 
           <div className="grid grid-3" id="services-panel" role="tabpanel" aria-labelledby={`tab-${activeTab}`}>
             {services.map((service, index) => (
@@ -120,7 +89,6 @@ export default function Home() {
                 <article className="service-card">
                   <div className={`service-card-media ${service.contain ? 'contain' : ''}`}>
                     <Img name={service.image} alt="" sizes="(min-width: 1024px) 400px, (min-width: 720px) 50vw, 100vw" />
-                    <span className="service-card-num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                   </div>
                   <div className="service-card-body">
                     <h3>{service.title}</h3>
@@ -145,13 +113,12 @@ export default function Home() {
             </div>
           </Reveal>
           <Reveal delay={100}>
-            <p className="eyebrow">Trusted locally</p>
             <h2 id="why-title">Why Ash-lee Motors</h2>
             <ul className="why-list">
-              <li><span className="num">01</span><p><strong>70+ years' combined experience</strong> across diagnostics, mechanical and auto-electrical.</p></li>
-              <li><span className="num">02</span><p><strong>Honest quotes &amp; clear explanations</strong> before any work begins.</p></li>
-              <li><span className="num">03</span><p><strong>Quality parts &amp; workmanship</strong> backed by warranty.</p></li>
-              <li><span className="num">04</span><p><strong>Quick turnarounds</strong> with same-day diagnostics available.</p></li>
+              <li><Icon name="check" size={20} /><p><strong>70+ years' combined experience</strong> across diagnostics, mechanical and auto-electrical.</p></li>
+              <li><Icon name="check" size={20} /><p><strong>Honest quotes &amp; clear explanations</strong> before any work begins.</p></li>
+              <li><Icon name="check" size={20} /><p><strong>Quality parts &amp; workmanship</strong> backed by warranty.</p></li>
+              <li><Icon name="check" size={20} /><p><strong>Quick turnarounds</strong> with same-day diagnostics available.</p></li>
             </ul>
             <p className="mt-6"><strong>Trusted locally.</strong> We service all major brands and accept Card &amp; EFT.</p>
             <ul className="chips">
@@ -167,10 +134,7 @@ export default function Home() {
       <section className="section" aria-labelledby="reviews-title">
         <div className="container">
           <Reveal className="section-head">
-            <div>
-              <p className="eyebrow">Reviews</p>
-              <h2 id="reviews-title">What Local Drivers Say</h2>
-            </div>
+            <h2 id="reviews-title">What Local Drivers Say</h2>
           </Reveal>
           <div className="grid grid-3">
             {[
@@ -189,16 +153,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA BAND */}
-      <section className="cta-band" aria-labelledby="cta-title">
-        <div className="container cta-band-inner">
-          <div>
-            <h2 id="cta-title">Need a same-day diagnostic?</h2>
-            <p>WhatsApp us now or call {primary.display}.</p>
-          </div>
-          <ContactButtons size="btn-lg" />
-        </div>
-      </section>
+      <CtaBand title="Need a same-day diagnostic?" text={`WhatsApp us now or call ${primary.display}.`}>
+        <ContactButtons size="btn-lg" />
+      </CtaBand>
     </>
   );
 }

@@ -2,16 +2,15 @@ import React from 'react';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import Img from '../components/Img';
-import Icon from '../components/Icon';
 import { videoUrls } from '../config/videoUrls';
 
 const reasons = [
-  { icon: 'clock', title: "70+ years' combined experience", text: 'across diagnostics, mechanical and auto-electrical' },
-  { icon: 'wrench', title: 'Dealer-level diagnostic tools', text: 'for all major vehicle brands' },
-  { icon: 'check', title: 'Honest quotes', text: 'with clear explanations before work begins' },
-  { icon: 'car', title: 'Quality parts & workmanship', text: 'backed by warranty' },
-  { icon: 'arrow', title: 'Quick turnarounds', text: 'with same-day diagnostics available' },
-  { icon: 'pin', title: 'Trusted locally', text: 'Serving the community for generations' },
+  { title: "70+ years' combined experience", text: 'across diagnostics, mechanical and auto-electrical' },
+  { title: 'Dealer-level diagnostic tools', text: 'for all major vehicle brands' },
+  { title: 'Honest quotes', text: 'with clear explanations before work begins' },
+  { title: 'Quality parts & workmanship', text: 'backed by warranty' },
+  { title: 'Quick turnarounds', text: 'with same-day diagnostics available' },
+  { title: 'Trusted locally', text: 'Serving the community for generations' },
 ];
 
 export default function About() {
@@ -22,7 +21,6 @@ export default function About() {
       <section className="section">
         <div className="container about-intro">
           <Reveal>
-            <p className="eyebrow">Who we are</p>
             <h2>Mission &amp; Values</h2>
             <p className="lead">
               At Ash-lee Motors, we believe in doing the job right the first time. With over 70 years of combined experience
@@ -60,7 +58,6 @@ export default function About() {
       <section className="section section-alt">
         <div className="container history">
           <Reveal>
-            <p className="eyebrow">Since the beginning</p>
             <h2>History</h2>
             <p>
               Ash-lee Motors has been serving the community for years, building trust through consistent,
@@ -97,15 +94,11 @@ export default function About() {
       <section className="section">
         <div className="container">
           <Reveal className="section-head">
-            <div>
-              <p className="eyebrow">The difference</p>
-              <h2>Why Choose Us</h2>
-            </div>
+            <h2>Why Choose Us</h2>
           </Reveal>
           <Reveal className="feature-grid">
             {reasons.map(r => (
               <div className="feature" key={r.title}>
-                <span className="icon-box"><Icon name={r.icon} size={22} /></span>
                 <h3>{r.title}</h3>
                 <p>{r.text}</p>
               </div>

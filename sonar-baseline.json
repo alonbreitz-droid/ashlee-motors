@@ -1,0 +1,6 @@
+{
+ "note": "How many findings of each rule each file has. A file:rule above its number fails scripts/sonar.mjs. Update with --update.",
+ "counts": {
+  "scripts/sonar.mjs|sonarjs/no-os-command-from-path": 1
+ }
+}

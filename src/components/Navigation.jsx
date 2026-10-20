@@ -90,10 +90,10 @@ export default function Navigation() {
 
       <div id="mobile-menu" className={`mobile-menu ${isMenuOpen ? 'open' : ''}`} inert={isMenuOpen ? undefined : ''}>
         <ol>
-          {links.map((l, i) => (
+          {links.map(l => (
             <li key={l.to}>
               <Link to={l.to} className={isActive(l.to)} aria-current={isActive(l.to) ? 'page' : undefined} onClick={() => setIsMenuOpen(false)}>
-                <span>0{i + 1}</span>{l.label}
+                {l.label}
               </Link>
             </li>
           ))}

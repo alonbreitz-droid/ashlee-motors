@@ -7,6 +7,7 @@ export default function Gallery() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const closeRef = useRef(null);
+  const dialogRef = useRef(null);
   const openerRef = useRef(null);
   const touchX = useRef(null);
 
@@ -27,14 +28,14 @@ export default function Gallery() {
     {
       id: 'workshop',
       label: 'The Workshop',
-      images: ['JFS_2352', 'JFS_2102', 'JFS_2172', 'JFS_2134', 'JFS_2210', 'JFS_2351', 'JFS_2222', 'JFS_2167',
-        'JFS_2170', 'JFS_2409']
+      images: ['JFS_2352', 'JFS_2102', 'JFS_2172', 'JFS_2134', 'JFS_2210', 'JFS_2351', 'JFS_2222', 'JFS_2167']
     },
     {
       id: 'team',
       label: 'The Team',
       images: ['JFS_2582-2', 'JFS_2473', 'JFS_2416', 'JFS_2503', 'JFS_2434', 'JFS_2486', 'JFS_2590', 'JFS_2451',
-        'JFS_2506', 'JFS_2481', 'JFS_2441', 'JFS_2499', 'JFS_2458', 'JFS_2452', 'JFS_2475', 'JFS_2579-2']
+        'JFS_2506', 'JFS_2481', 'JFS_2441', 'JFS_2499', 'JFS_2458', 'JFS_2452', 'JFS_2579-2',
+        'JFS_2475', 'JFS_2409', 'JFS_2170']
     }
   ];
   // Near-duplicate frames from the same bursts, held back to keep the grid varied.
@@ -54,6 +55,7 @@ export default function Gallery() {
   const labelFor = (id) => groups.find(g => g.id === id).label;
 
   const selectedImage = selectedIndex === null ? null : filteredImages[selectedIndex];
+  const isOpen = selectedImage !== null;
 
   const closeModal = useCallback(() => {
     setSelectedIndex(null);
@@ -65,7 +67,7 @@ export default function Gallery() {
   }, [filteredImages.length]);
 
   useEffect(() => {
-    if (selectedIndex === null) return undefined;
+    if (!isOpen) return undefined;
     closeRef.current?.focus();
     document.body.style.overflow = 'hidden';
     const handleKeyDown = (e) => {
@@ -74,7 +76,7 @@ export default function Gallery() {
       else if (e.key === 'ArrowLeft') step(-1);
       else if (e.key === 'Tab') {
         // keep focus inside the lightbox
-        const els = [...document.querySelectorAll('.lightbox button')];
+        const els = [...dialogRef.current.querySelectorAll('button')];
         const i = els.indexOf(document.activeElement);
         if (e.shiftKey && i <= 0) { e.preventDefault(); els[els.length - 1].focus(); }
         else if (!e.shiftKey && i === els.length - 1) { e.preventDefault(); els[0].focus(); }
@@ -85,7 +87,7 @@ export default function Gallery() {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [selectedIndex === null, closeModal, step]);
+  }, [isOpen, closeModal, step]);
 
   // Preload the neighbours so next/prev feel instant
   useEffect(() => {
@@ -98,9 +100,7 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHeader eyebrow="Inside the workshop" title="Gallery" image="JFS_2172">
-        <p className="lead">Real work from our workshop in Wynberg, Sandton.</p>
-      </PageHeader>
+      <PageHeader title="Gallery" image="JFS_2172" />
 
       <section className="section">
         <div className="container">
@@ -151,6 +151,7 @@ export default function Gallery() {
 
       {selectedImage && (
         <div
+          ref={dialogRef}
           className="lightbox"
           role="dialog"
           aria-modal="true"

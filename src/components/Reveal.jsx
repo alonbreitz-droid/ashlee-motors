@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // Fades content up as it enters the viewport. Content is visible by default:
 // the hidden start state only applies once JS has confirmed IntersectionObserver
 // and the user has not asked for reduced motion (see .reveal in index.css).
-export default function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...rest }) {
+export default function Reveal({ as: Tag = 'div', delay = 0, className = '', style, children, ...rest }) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Reveal({ as: Tag = 'div', delay = 0, className = '', chi
     <Tag
       ref={ref}
       className={`reveal ${shown ? 'is-in' : ''} ${className}`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      style={delay ? { ...style, transitionDelay: `${delay}ms` } : style}
       {...rest}
     >
       {children}
