@@ -1033,7 +1033,7 @@ a.number-value:hover { color: var(--red-text); }
 .reveal { transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .js-motion .reveal:not(.is-in) { opacity: 0; transform: translateY(24px); }
 
-.route-loading { min-height: 60vh; }
+.route-loading { min-height: 100vh; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
