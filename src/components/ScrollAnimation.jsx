@@ -43,10 +43,8 @@ export default function ScrollAnimation({ children, delay = 0 }) {
     <div
       ref={ref}
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-        transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
-        willChange: isVisible ? 'auto' : 'transform, opacity',
+        opacity: isVisible ? 1 : 0.3,
+        transition: 'opacity 0.3s ease-out',
       }}
     >
       {children}

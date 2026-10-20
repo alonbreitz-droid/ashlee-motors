@@ -1,4 +1,5 @@
 import React from 'react';
+import { videoUrls } from '../config/videoUrls';
 
 export default function About() {
   // Unique images for About page - not used elsewhere
@@ -23,7 +24,7 @@ export default function About() {
             position: 'relative'
           }}>
             <img 
-              src={`/assets/gallery/${aboutImages[0]}`} 
+              src={`/assets/gallery/optimized/${aboutImages[0]}`} 
               alt="Ash-lee Motors workshop"
               loading="eager"
               fetchPriority="high"
@@ -33,6 +34,10 @@ export default function About() {
                 height: '100%',
                 objectFit: 'cover',
                 objectPosition: 'center top'
+              }}
+              onError={(e) => {
+                // Fallback to original if optimized doesn't exist
+                e.target.src = e.target.src.replace('/optimized/', '/');
               }}
             />
           </div>
@@ -54,21 +59,23 @@ export default function About() {
                 We're committed to quick turnarounds without compromising on quality. Whether you need a same-day diagnostic 
                 or a full engine rebuild, we treat every vehicle with the care and attention it deserves.
               </p>
-              <video
-                controls
-                autoPlay
-                loop
-                playsInline
-                preload="metadata"
-                style={{
-                  width: '100%',
-                  borderRadius: 'var(--radius-16)',
-                  marginTop: 'var(--space-6)'
-                }}
-              >
-                <source src={videoUrls.aboutVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              {videoUrls.aboutVideo && (
+                <video
+                  controls
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="metadata"
+                  style={{
+                    width: '100%',
+                    borderRadius: 'var(--radius-16)',
+                    marginTop: 'var(--space-6)'
+                  }}
+                >
+                  <source src={videoUrls.aboutVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
 
             <div>

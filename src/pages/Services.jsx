@@ -6,11 +6,11 @@ export default function Services() {
   // Unique images for Services page - different from Home page
   const serviceImages = {
     'Computer Diagnostics': '/assets/GT-LTDM2-1_600x.jpg.webp',
-    'Engine & Gearbox': 'JFS_2302.jpeg',
-    'Clutch & Brakes': 'JFS_2375.jpeg',
-    'Auto-Electrical': 'JFS_2246.jpeg',
-    'Air-Con & Cooling': 'JFS_2315.jpeg',
-    'Fleet Care': 'JFS_2340.jpeg'
+    'Engine & Gearbox': '/assets/gallery/optimized/JFS_2302.jpeg',
+    'Clutch & Brakes': '/assets/gallery/optimized/JFS_2375.jpeg',
+    'Auto-Electrical': '/assets/gallery/optimized/JFS_2246.jpeg',
+    'Air-Con & Cooling': '/assets/gallery/optimized/JFS_2315.jpeg',
+    'Fleet Care': '/assets/gallery/optimized/JFS_2340.jpeg'
   };
 
   const specializedServices = [
@@ -105,7 +105,7 @@ export default function Services() {
         'Fuel filter replacement',
         'Scheduled service intervals'
       ],
-      image: 'JFS_2201.jpeg'
+      image: '/assets/gallery/optimized/JFS_2201.jpeg'
     },
     {
       title: 'Emergency Light & Spotlight Fitment',
@@ -131,7 +131,7 @@ export default function Services() {
         'Starter motor testing',
         'Battery terminal cleaning'
       ],
-      image: 'JFS_2127.jpeg'
+      image: '/assets/gallery/optimized/JFS_2127.jpeg'
     },
     {
       title: 'Vehicle Inspections',
@@ -144,7 +144,7 @@ export default function Services() {
         'Emission testing',
         'Service history reviews'
       ],
-      image: 'JFS_2268.jpeg'
+      image: '/assets/gallery/optimized/JFS_2268.jpeg'
     },
     {
       title: 'General Repairs',
@@ -157,7 +157,7 @@ export default function Services() {
         'Drivetrain repairs',
         'General maintenance'
       ],
-      image: 'JFS_2187.jpeg'
+      image: '/assets/gallery/optimized/JFS_2187.jpeg'
     },
     {
       title: 'Recovery Services',
@@ -170,7 +170,7 @@ export default function Services() {
         'Emergency repairs',
         '24/7 availability'
       ],
-      image: 'JFS_2343.jpeg'
+      image: '/assets/gallery/optimized/JFS_2343.jpeg'
     }
   ];
 

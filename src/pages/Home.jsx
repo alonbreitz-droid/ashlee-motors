@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ScrollAnimation from "../components/ScrollAnimation";
+import { videoUrls } from "../config/videoUrls";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('specialized');
@@ -24,7 +25,7 @@ export default function Home() {
     {
       title: 'Engine & Gearbox',
       description: 'Repairs, replacements and services for engines and manual/auto gearboxes. Timing sets and seals.',
-      image: `/assets/gallery/${homeServiceImages['Engine & Gearbox']}`,
+                    image: `/assets/gallery/optimized/${homeServiceImages['Engine & Gearbox']}`,
       buttonText: 'Get a quote'
     },
     {
@@ -48,7 +49,7 @@ export default function Home() {
     {
       title: 'Fleet Care',
       description: 'Priority booking, preventative schedules, consolidated invoicing and digital service records.',
-      image: '/assets/gallery/JFS_2340.jpeg',
+      image: '/assets/gallery/optimized/JFS_2340.jpeg',
       buttonText: 'Enquire about fleet'
     }
   ];
@@ -57,7 +58,7 @@ export default function Home() {
     {
       title: 'Oil Changes & Service',
       description: 'Regular oil changes, filter replacements, and scheduled maintenance to keep your vehicle running smoothly.',
-      image: '/assets/gallery/JFS_2201.jpeg',
+      image: '/assets/gallery/optimized/JFS_2201.jpeg',
       buttonText: 'Book service'
     },
     {
@@ -69,25 +70,25 @@ export default function Home() {
     {
       title: 'Battery Services',
       description: 'Battery testing, replacement, and charging system diagnostics to keep you on the road.',
-      image: '/assets/gallery/JFS_2127.jpeg',
+      image: '/assets/gallery/optimized/JFS_2127.jpeg',
       buttonText: 'Test battery'
     },
     {
       title: 'Vehicle Inspections',
       description: 'Comprehensive vehicle inspections, pre-purchase checks, and roadworthy certifications.',
-      image: '/assets/gallery/JFS_2268.jpeg',
+      image: '/assets/gallery/optimized/JFS_2268.jpeg',
       buttonText: 'Book inspection'
     },
     {
       title: 'General Repairs',
       description: 'All general automotive repairs and maintenance work performed by experienced technicians.',
-      image: '/assets/gallery/JFS_2187.jpeg',
+      image: '/assets/gallery/optimized/JFS_2187.jpeg',
       buttonText: 'Get a quote'
     },
     {
       title: 'Recovery Services',
       description: 'Vehicle recovery and roadside assistance to get you back on the road quickly and safely.',
-      image: '/assets/gallery/JFS_2343.jpeg',
+      image: '/assets/gallery/optimized/JFS_2343.jpeg',
       buttonText: 'Call recovery'
     }
   ];
@@ -102,8 +103,11 @@ export default function Home() {
           loop 
           muted 
           playsInline
-          preload="metadata"
-          poster="/assets/logo.PNG"
+          preload="auto"
+          poster="/assets/gallery/optimized/JFS_2360.jpeg"
+          style={{
+            objectPosition: 'center center'
+          }}
         >
           <source src={videoUrls.heroVideo} type="video/mp4" />
         </video>
@@ -151,7 +155,9 @@ export default function Home() {
                 <article className="card service-card">
                 <div className="service-card-image-wrapper">
                   <img 
-                    src={service.image} 
+                    src={service.image.startsWith('/assets/gallery/') && !service.image.includes('optimized') 
+                      ? service.image.replace('/assets/gallery/', '/assets/gallery/optimized/')
+                      : service.image} 
                     alt={service.title}
                     loading="lazy"
                     decoding="async"
@@ -162,7 +168,13 @@ export default function Home() {
                       objectFit: 'cover',
                       borderRadius: 'var(--radius-8)',
                       marginBottom: 'var(--space-4)',
-                      transition: 'transform 0.3s ease'
+                      transition: 'opacity 0.3s ease, transform 0.3s ease'
+                    }}
+                    onError={(e) => {
+                      // Fallback to original if optimized doesn't exist
+                      if (e.target.src.includes('optimized')) {
+                        e.target.src = e.target.src.replace('/optimized/', '/');
+                      }
                     }}
                   />
                   <div className="service-card-overlay">

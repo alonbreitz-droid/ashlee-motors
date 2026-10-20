@@ -6,8 +6,10 @@ export default function Gallery() {
 
   const filters = [
     { id: 'all', label: 'All' },
-    { id: 'bodywork', label: 'Bodywork' },
-    { id: 'mechanical', label: 'Mechanical' }
+    { id: 'mechanical', label: 'Mechanical' },
+    { id: 'diagnostics', label: 'Diagnostics' },
+    { id: 'electrical', label: 'Auto-Electrical' },
+    { id: 'service', label: 'General Service' }
   ];
 
   // All gallery images - EXCLUDING images used on other pages
@@ -33,11 +35,99 @@ export default function Gallery() {
     'JFS_2506.jpeg', 'JFS_2579-2.jpeg', 'JFS_2582-2.jpeg', 'JFS_2590.jpeg'
   ];
 
-  // Categorize images (alternating for variety)
+  // Categorize images based on service types
+  // Each image belongs to only one category (priority: specific > general)
+  const imageCategoryMap = {
+    // Diagnostics (Computer Diagnostics, Diagnostic Equipment) - Most specific
+    'JFS_2119.jpeg': 'diagnostics',
+    'JFS_2121.jpeg': 'diagnostics',
+    'JFS_2134.jpeg': 'diagnostics',
+    'JFS_2148.jpeg': 'diagnostics',
+    'JFS_2191.jpeg': 'diagnostics',
+    'JFS_2234.jpeg': 'diagnostics',
+    'JFS_2291.jpeg': 'diagnostics',
+    'JFS_2312.jpeg': 'diagnostics',
+    'JFS_2409.jpeg': 'diagnostics',
+    'JFS_2432.jpeg': 'diagnostics',
+    'JFS_2441-2.jpeg': 'diagnostics',
+    'JFS_2451-2.jpeg': 'diagnostics',
+    
+    // Auto-Electrical (Electrical Work, Battery, Wiring)
+    'JFS_2117.jpeg': 'electrical',
+    'JFS_2122.jpeg': 'electrical',
+    'JFS_2138.jpeg': 'electrical',
+    'JFS_2154.jpeg': 'electrical',
+    'JFS_2167.jpeg': 'electrical',
+    'JFS_2170.jpeg': 'electrical',
+    'JFS_2172.jpeg': 'electrical',
+    'JFS_2195.jpeg': 'electrical',
+    'JFS_2222.jpeg': 'electrical',
+    'JFS_2237.jpeg': 'electrical',
+    'JFS_2241.jpeg': 'electrical',
+    'JFS_2248-2.jpeg': 'electrical',
+    'JFS_2253.jpeg': 'electrical',
+    'JFS_2296.jpeg': 'electrical',
+    'JFS_2336.jpeg': 'electrical',
+    'JFS_2352.jpeg': 'electrical',
+    'JFS_2418.jpeg': 'electrical',
+    'JFS_2426.jpeg': 'electrical',
+    'JFS_2427.jpeg': 'electrical',
+    'JFS_2434.jpeg': 'electrical',
+    'JFS_2437.jpeg': 'electrical',
+    'JFS_2449-2.jpeg': 'electrical',
+    'JFS_2451.jpeg': 'electrical',
+    'JFS_2452.jpeg': 'electrical',
+    'JFS_2456.jpeg': 'electrical',
+    'JFS_2458.jpeg': 'electrical',
+    'JFS_2462.jpeg': 'electrical',
+    'JFS_2473.jpeg': 'electrical',
+    'JFS_2475.jpeg': 'electrical',
+    'JFS_2481.jpeg': 'electrical',
+    'JFS_2486.jpeg': 'electrical',
+    'JFS_2499.jpeg': 'electrical',
+    'JFS_2503.jpeg': 'electrical',
+    'JFS_2506.jpeg': 'electrical',
+    'JFS_2579-2.jpeg': 'electrical',
+    'JFS_2582-2.jpeg': 'electrical',
+    
+    // Air-Con & Cooling images reassigned to Mechanical
+    'JFS_2082.jpeg': 'mechanical',
+    'JFS_2087.jpeg': 'mechanical',
+    'JFS_2092.jpeg': 'mechanical',
+    'JFS_2097.jpeg': 'mechanical',
+    'JFS_2098.jpeg': 'mechanical',
+    'JFS_2100.jpeg': 'mechanical',
+    'JFS_2102.jpeg': 'mechanical',
+    'JFS_2107.jpeg': 'mechanical',
+    'JFS_2159.jpeg': 'mechanical',
+    'JFS_2189.jpeg': 'mechanical',
+    'JFS_2199.jpeg': 'mechanical',
+    'JFS_2210.jpeg': 'mechanical',
+    'JFS_2265.jpeg': 'mechanical',
+    'JFS_2351.jpeg': 'mechanical',
+    'JFS_2368.jpeg': 'mechanical',
+    'JFS_2392.jpeg': 'mechanical',
+    'JFS_2415.jpeg': 'mechanical',
+    'JFS_2416.jpeg': 'mechanical',
+    'JFS_2441.jpeg': 'mechanical',
+    'JFS_2449.jpeg': 'mechanical',
+    'JFS_2590.jpeg': 'mechanical',
+    
+    // General Service (Oil Changes, Inspections, Maintenance)
+    'JFS_2201.jpeg': 'service',
+    'JFS_2187.jpeg': 'service',
+    'JFS_2109-2.jpeg': 'service',
+    'JFS_2202.jpeg': 'service',
+    
+    // Mechanical (Engine, Gearbox, Clutch, Brakes, General Repairs) - Default for remaining
+    // All other images default to mechanical
+  };
+
+  // Create categorized images array
   const categorizedImages = allImages.map((image, index) => ({
     id: index,
     filename: image,
-    category: index % 3 === 0 ? 'bodywork' : 'mechanical'
+    category: imageCategoryMap[image] || 'mechanical'
   }));
 
   const filteredImages = activeFilter === 'all' 
@@ -112,11 +202,17 @@ export default function Gallery() {
                 onClick={() => openModal(item)}
               >
                 <img 
-                  src={`/assets/gallery/${item.filename}`} 
+                  src={`/assets/gallery/optimized/${item.filename}`} 
                   alt={`Ash-lee Motors ${item.category}`}
                   loading="lazy"
                   decoding="async"
                   fetchPriority={item.id < 6 ? "high" : "low"}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transition: 'opacity 0.3s ease-in-out'
+                  }}
                 />
               </div>
             ))}
@@ -157,7 +253,7 @@ export default function Gallery() {
             ‹
           </button>
           <img 
-            src={`/assets/gallery/${selectedImage.filename}`} 
+            src={`/assets/gallery/optimized/${selectedImage.filename}`} 
             alt={`Ash-lee Motors ${selectedImage.category} - Image ${filteredImages.findIndex(img => img.filename === selectedImage.filename) + 1} of ${filteredImages.length}`}
             onClick={(e) => e.stopPropagation()}
             loading="eager"

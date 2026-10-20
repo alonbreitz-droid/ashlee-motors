@@ -34,7 +34,7 @@ export default function Navigation() {
   }, [isMenuOpen]);
 
   return (
-    <nav className={isScrolled ? 'scrolled' : ''}>
+    <nav className={isScrolled ? 'scrolled' : ''} style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
       <div className="container nav-container">
         <Link to="/" className="nav-brand" style={{display: 'flex', alignItems: 'center', gap: 'var(--space-3)'}}>
           <img src="/assets/logo.PNG" alt="Ash-Lee Motors" className="nav-logo" />

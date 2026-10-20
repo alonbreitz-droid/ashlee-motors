@@ -28,11 +28,11 @@ yarn-error.log*
 *.swo
 *~
 
-# Large video files (hosted on Cloudflare R2)
+# Large video files (excluded from build)
 *.mp4
 **/Ash-Lee Reel*.mp4
 **/Ash-Lee reel*.mp4
-
 # Allow compressed videos for Cloudflare Pages
-!public/assets/compressed/*.mp4
+!public/assets/compressed/hero-video.mp4
+!public/assets/compressed/about-video.mp4
 
